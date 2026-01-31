@@ -1,0 +1,12 @@
+[Unit]
+Description=Send notification after Arch update for %i
+After=archupd.service
+
+[Service]
+Type=oneshot
+User=%i
+# Пытаемся автоматически найти ID пользователя для DBUS
+ExecStart=/usr/bin/sh -c 'DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u %i)/bus /usr/bin/notify-send "Arch Update" "System updated successfully at $(date +%%H:%%M)" -i system-software-update'
+
+[Install]
+WantedBy=multi-user.target

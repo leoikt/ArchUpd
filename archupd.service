@@ -1,0 +1,41 @@
+# /etc/systemd/system/archupd.service
+# Перезагрузка конфигурации
+#sudo systemctl daemon-reload
+
+# Включение таймера
+#sudo systemctl enable --now archupd.timer
+
+# Опционально: проверить уведомление (подставьте свой логин вместо 'user')
+# sudo systemctl start archupd-notify@user.service
+
+[Unit]
+Description=Arch Linux Automatic Update (Lite)
+After=network-online.target
+Wants=network-online.target
+ConditionACPower=true
+# Добавим запуск уведомления при успехе
+OnSuccess=archupd-notify@{{USER}}.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/bin/archupdauto
+MemoryMax=512M
+CPUQuota=30%
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=archupdauto
+
+# --- БЕЗОПАСНОСТЬ ---
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+# Добавляем /boot и /run/mount (для работы mount)
+ReadWritePaths=/var/cache/pacman/pkg /var/lib/pacman /boot /run/mount /tmp
+# Позволяет монтировать/размонтировать внутри пространства имен
+MountFlags=shared
+# Важно: для работы mount внутри сервиса с ProtectSystem=strict
+CapabilityBoundingSet=CAP_SYS_ADMIN CAP_CHOWN CAP_DAC_OVERRIDE
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+# /etc/systemd/system/archupd.timer
+[Unit]
+Description=Daily Arch Update (Lite)
+
+[Timer]
+Unit=archupd.service
+# Ежедневно в 10:00 с случайной задержкой до 2 часов
+OnCalendar=*-*-* 10:00:00
+RandomizedDelaySec=2h
+Persistent=true
+# Запускать даже если пропустили по выключенному компьютеру
+WakeSystem=false
+
+[Install]
+WantedBy=timers.target
