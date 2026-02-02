@@ -102,7 +102,7 @@ sudo ./install.sh --uninstall
 ### Установка через Git (рекомендуется)
 
 ```bash
-git clone https://github.com/leoikt/ArchUpd.git
+git clone https://github.com/leoikt/archupd.git
 cd archupd
 sudo ./install.sh
 ```
